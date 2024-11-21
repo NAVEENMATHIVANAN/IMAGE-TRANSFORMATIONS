@@ -1,4 +1,4 @@
-# IMAGE-TRANSFORMATIONS
+# Exp-4- Record-Image Transformations 
 
 
 ## Aim
@@ -8,24 +8,19 @@ To perform image transformation such as Translation, Scaling, Shearing, Reflecti
 Anaconda - Python 3.7
 
 ## Algorithm:
-### Step1:
-
-Import necessary libraries such as OpenCV, NumPy, and Matplotlib for image processing and visualization.
+### Step1: 
+ Import necessary libraries such as OpenCV, NumPy, and Matplotlib for image processing and visualization.
 
 ### Step2:
-
 Read the input image using cv2.imread() and store it in a variable for further processing.
 
-
 ### Step3:
-
 Apply various transformations like translation, scaling, shearing, reflection, rotation, and cropping by defining corresponding functions:
-
-1.Translation moves the image along the x or y-axis.
-2.Scaling resizes the image by scaling factors.
-3.Shearing distorts the image along one axis.
-4.Reflection flips the image horizontally or vertically.
-5.Rotation rotates the image by a given angle.
+1. Translation moves the image along the x or y-axis.
+2. Scaling resizes the image by scaling factors.
+3. Shearing distorts the image along one axis.
+4. Reflection flips the image horizontally or vertically.
+5. Rotation rotates the image by a given angle.
 
 ### Step4:
 Display the transformed images using Matplotlib for visualization. Convert the BGR image to RGB format to ensure proper color representation.
@@ -35,98 +30,92 @@ Save or display the final transformed images for analysis and use plt.show() to 
 
 ## Program:
 
-```python
-
+```
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+
+# Load the image
+image = cv2.imread('dog.jpg')
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB for Matplotlib
 ```
-# Function to display image using Matplotlib
 ```
-def display_image(image, title):
-    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB for proper color display
-    plt.imshow(image_rgb)
-    plt.title(title)
-    plt.axis('off')
-    plt.show()
+plt.imshow(image_rgb)
+plt.title("Original Image")
+plt.axis('off')
 ```
-# Load an image
+![image](https://github.com/user-attachments/assets/fbe21a73-826a-4dca-a412-2dc7010ebb0c)
 ```
-image = cv2.imread('tree.jpg')
-display_image(image, 'Original Image')
+# 1. Translation
+rows, cols, _ = image.shape
+M_translate = np.float32([[1, 0, 50], [0, 1, 100]])  # Translate by (50, 100) pixels
+translated_image = cv2.warpAffine(image_rgb, M_translate, (cols, rows))
+```
+```
+plt.imshow(translated_image)
+plt.title("Translated Image")
+plt.axis('off')
+```
+![image](https://github.com/user-attachments/assets/dbe835cb-9f15-47d4-946d-1d151b79fda3)
+```
+# 2. Scaling
+scaled_image = cv2.resize(image_rgb, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_LINEAR)  # Scale by 1.5x
+```
+```
+plt.imshow(scaled_image)
+plt.title("Scaled Image")
+plt.axis('off')
+```
+![image](https://github.com/user-attachments/assets/2ca87df4-c779-44af-9e94-a65312d8657f)
 
 ```
-# i) Image Translation
+# 3. Shearing
+M_shear = np.float32([[1, 0.5, 0], [0.5, 1, 0]])  # Shear with factor 0.5
+sheared_image = cv2.warpAffine(image_rgb, M_shear, (int(cols * 1.5), int(rows * 1.5)))
 ```
-def translate(img, x, y):
-    M = np.float32([[1, 0, x], [0, 1, y]])
-    translated = cv2.warpAffine(img, M, (img.shape[1], img.shape[0]))
-    return translated
-
-translated_image = translate(image, 100, 50)
-display_image(translated_image, 'Translated Image')
 ```
-# ii) Image Scaling
+plt.imshow(sheared_image)
+plt.title("Sheared Image")
+plt.axis('off')
 ```
-def scale(img, scale_x, scale_y):
-    scaled = cv2.resize(img, None, fx=scale_x, fy=scale_y, interpolation=cv2.INTER_LINEAR)
-    return scaled
-
-scaled_image = scale(image, 1.5, 1.5)
-display_image(scaled_image, 'Scaled Image')
-```
-# iii) Image Shearing
-```
-def shear(img, shear_factor):
-    rows, cols, _ = img.shape
-    M = np.float32([[1, shear_factor, 0], [0, 1, 0]])
-    sheared = cv2.warpAffine(img, M, (cols, rows))
-    return sheared
-
-sheared_image = shear(image, 0.5)
-display_image(sheared_image, 'Sheared Image')
-```
-# iv) Image Reflection
-```
-def reflect(img):
-    reflected = cv2.flip(img, 1)  # 1 for horizontal flip
-    return reflected
-
-reflected_image = reflect(image)
-display_image(reflected_image, 'Reflected Image')
-```
-# v) Image Rotation
-```
-def rotate(img, angle):
-    (h, w) = img.shape[:2]
-    center = (w // 2, h // 2)
-    M = cv2.getRotationMatrix2D(center, angle, 1.0)
-    rotated = cv2.warpAffine(img, M, (w, h))
-    return rotated
-
-rotated_image = rotate(image, 45)
-display_image(rotated_image, 'Rotated Image')
-```
-# vi) Image Cropping
-```
-def crop(img, start_row, start_col, end_row, end_col):
-    cropped = img[start_row:end_row, start_col:end_col]
-    return cropped
-
-cropped_image = crop(image, 50, 50, 200, 200)
-display_image(cropped_image, 'Cropped Image')
+![image](https://github.com/user-attachments/assets/01b8fe2c-f7d4-4f38-bb8f-877592abc663)
 
 ```
+# 4. Reflection (Flip)
+reflected_image = cv2.flip(image_rgb, 1)  # Horizontal reflection (flip along y-axis)
+```
+```
+plt.imshow(reflected_image)
+plt.title("Reflected Image")
+plt.axis('off')
+```
+![image](https://github.com/user-attachments/assets/64f07186-2cc2-4d52-83b1-f6cebafa724a)
 
-## Output:
+```
+# 5. Rotation
+M_rotate = cv2.getRotationMatrix2D((cols / 2, rows / 2), 45, 1)  # Rotate by 45 degrees
+rotated_image = cv2.warpAffine(image_rgb, M_rotate, (cols, rows))
+```
+```
+plt.imshow(rotated_image)
+plt.title("Rotated Image")
+plt.axis('off')
+```
+![image](https://github.com/user-attachments/assets/df3fdcdb-b1fc-4f3c-8a68-933d68a08708)
 
-![Screenshot 2024-10-01 104123](https://github.com/user-attachments/assets/60c6e563-c954-41ce-9ef0-bab96d336694)
-![Screenshot 2024-10-01 104049](https://github.com/user-attachments/assets/384bb186-38a4-47b9-bbf7-7e130dd1d082)
-![Screenshot 2024-10-01 104025](https://github.com/user-attachments/assets/4b512c5e-1038-400c-be9f-211e6e349407)
-![Screenshot 2024-10-01 104002](https://github.com/user-attachments/assets/f3e5d6d4-7637-4cb1-9eb0-80b9fc84397a)
-![Screenshot 2024-10-01 103931](https://github.com/user-attachments/assets/618192a8-9ac1-444a-beda-622169bbe041)
-![Screenshot 2024-10-01 103753](https://github.com/user-attachments/assets/866611da-f31d-4341-8372-c85d322a314e)
-![Screenshot 2024-10-01 104143](https://github.com/user-attachments/assets/1921d1d2-99be-4270-9280-e5b68a299076)
+```
+# 6. Cropping
+cropped_image = image_rgb[50:300, 100:400]  # Crop a portion of the image
+```
+```
+plt.imshow(cropped_image)
+plt.title("Cropped Image")
+plt.axis('off')
+plt.show()
+```
+
+![image](https://github.com/user-attachments/assets/5c5989da-9684-4eb3-951a-a34248e89ce4)
+
 
 
 
